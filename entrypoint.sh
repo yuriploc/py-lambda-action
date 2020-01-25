@@ -7,7 +7,8 @@ install_zip_dependencies(){
 # 	zip -r dependencies.zip ./python
 	poetry export -f requirements.txt -o requirements.txt && \
         pip install -r requirements.txt --target python && \
-        rm requirements.txt && zip -r ./python.zip python/
+        rm requirements.txt && zip -r ./python.zip python/ && \
+	zip python.zip -d docker* Docker* .\*
 #         rm -rf python
 }
 
@@ -21,7 +22,8 @@ publish_dependencies_as_layer(){
 
 publish_function_code(){
 	echo "Deploying the code itself..."
-	zip -r financial-api.zip . -x \*.git\*
+	zip -r financial-api.zip . -x \*.git\* && \
+	zip financial-api.zip -d docker* Docker* .\*
 	aws lambda update-function-code --function-name "${LAMBDA_FUNCTION_NAME}" --zip-file fileb://financial-api.zip
 }
 
