@@ -1,11 +1,11 @@
-FROM python:3.6
+FROM python:3.7
 
-LABEL "com.github.actions.name"="Py Lambda Deploy"
+LABEL "com.github.actions.name"="Python Lambda Deploy"
 LABEL "com.github.actions.description"="Deploy python code to AWS Lambda with dependencies in a separate layer."
 LABEL "com.github.actions.icon"="layers"
 LABEL "com.github.actions.color"="yellow"
 
-LABEL "repository"="http://github.com/mariamrf/py-lambda-action"
+LABEL "repository"="http://github.com/yuriploc/py-lambda-action"
 LABEL "maintainer"="Mariam Maarouf <mrf.mariam@gmail.com>"
 
 RUN apt-get update
