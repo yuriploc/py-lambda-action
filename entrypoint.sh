@@ -14,7 +14,7 @@ install_zip_dependencies(){
 
 publish_dependencies_as_layer(){
 	echo "Publishing dependencies as a layer..."
-	local result=$(aws lambda publish-layer-version --layer-name "${LAMBDA_LAYER_ARN}" --zip-file fileb://python.zip)
+	local result=$(aws lambda publish-layer-version --region "${AWS_DEFAULT_REGION}" --layer-name "${LAMBDA_LAYER_ARN}" --zip-file fileb://python.zip)
 	LAYER_VERSION=$(jq '.Version' <<< "$result")
 	rm -rf python
 # 	rm dependencies.zip
@@ -24,12 +24,12 @@ publish_function_code(){
 	echo "Deploying the code itself..."
 	zip -r financial-api.zip . -x \*.git\* && \
 	zip financial-api.zip -d docker* Docker* .\*
-	aws lambda update-function-code --function-name "${LAMBDA_FUNCTION_NAME}" --zip-file fileb://financial-api.zip
+	aws lambda update-function-code --region "${AWS_DEFAULT_REGION}" --function-name "${LAMBDA_FUNCTION_NAME}" --zip-file fileb://financial-api.zip
 }
 
 update_function_layers(){
 	echo "Using the layer in the function..."
-	aws lambda update-function-configuration --function-name "${LAMBDA_FUNCTION_NAME}" --layers "${LAMBDA_LAYER_ARN}:${LAYER_VERSION}"
+	aws lambda update-function-configuration --region "${AWS_DEFAULT_REGION}" --function-name "${LAMBDA_FUNCTION_NAME}" --layers "${LAMBDA_LAYER_ARN}:${LAYER_VERSION}"
 }
 
 deploy_lambda_function(){
