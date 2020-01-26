@@ -1,15 +1,10 @@
 #!/bin/bash
 
 install_zip_dependencies(){
-# 	echo "Installing and zipping dependencies..."
-# 	mkdir python
-# 	pip install --target=python -r requirements.txt
-# 	zip -r dependencies.zip ./python
 	poetry export -f requirements.txt -o requirements.txt && \
         pip install -r requirements.txt --target python && \
         rm requirements.txt && zip -r ./python.zip python/ && \
 	zip python.zip -d docker* Docker* .\*
-#         rm -rf python
 }
 
 publish_dependencies_as_layer(){
@@ -17,7 +12,6 @@ publish_dependencies_as_layer(){
 	local result=$(aws lambda publish-layer-version --region "${AWS_DEFAULT_REGION}" --layer-name "${LAMBDA_LAYER_ARN}" --zip-file fileb://python.zip)
 	LAYER_VERSION=$(jq '.Version' <<< "$result")
 	rm -rf python
-# 	rm dependencies.zip
 }
 
 publish_function_code(){
